@@ -9,6 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 	"time"
+
+	"fmt"
 )
 
 func GetConnection() (*mongo.Database, *mongo.Client, context.Context) {

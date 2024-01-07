@@ -13,7 +13,7 @@ import (
 	"net/http"
 	
 	"encoding/json"
-	"github.com/wdias/nwdaf/model"
+	"github.com/wsilvad/nwdaf/model"
 
 	"time"
 
