@@ -47,5 +47,11 @@ var routes = Routes{
 		"/datacollection/amf-contexts/registration-accept",
 		HTTPAmfRegistrationAccept,
 	},
+	{
+		"PrometheusData",
+		strings.ToUpper("Post"),
+		"/datacollection/prometheus/data",
+		HTTPPrometheusCollect,
+	},
 }
 
