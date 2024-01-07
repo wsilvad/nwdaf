@@ -98,8 +98,8 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 	now_timestamp := now.Unix()
 	threeHoursAgo_timestamp := threeHoursAgo.Unix()
 
-	fmt.Printf("Now: ", now_timestamp)
-	fmt.Printf("Tree times Ago: ", threeHoursAgo_timestamp)
+	fmt.Println("Now: ", now_timestamp)
+	fmt.Println("Tree times Ago: ", threeHoursAgo_timestamp)
 
 	for i < 1 {
 		for num_ue := 0; num_ue < len(ue); num_ue ++ {
