@@ -16,6 +16,7 @@ import (
 	"github.com/wsilvad/nwdaf/model"
 
 	"time"
+	"strconv"
 
 )
 
@@ -95,8 +96,8 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 	now := time.Now()
 	threeHoursAgo := now.Add(-3 * time.Hour)
 
-	now_timestamp := now.Unix()
-	threeHoursAgo_timestamp := threeHoursAgo.Unix()
+	now_timestamp := strconv.timestamp(now.Unix())
+	threeHoursAgo_timestamp := strconv.timestamp(threeHoursAgo.Unix())
 
 	fmt.Println("Now: ", now_timestamp)
 	fmt.Println("Tree times Ago: ", threeHoursAgo_timestamp)
