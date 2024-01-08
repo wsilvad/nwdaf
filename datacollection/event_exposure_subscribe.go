@@ -93,11 +93,11 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 	i := 0
 
 	// cat tree times ago
-	// now := time.Now()
-	// threeHoursAgo := now.Add(-3 * time.Hour)
+	now := time.Now()
+	threeHoursAgo := now.Add(-3 * time.Hour)
 
-	// now_timestamp := now.Unix()
-	// threeHoursAgo_timestamp := threeHoursAgo.Unix()
+	now_timestamp := now.Unix()
+	threeHoursAgo_timestamp := threeHoursAgo.Unix()
 
 	// fmt.Printf("Now: %+v", now_timestamp)
 	// fmt.Printf("Tree times Ago: %+v", threeHoursAgo_timestamp)
