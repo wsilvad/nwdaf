@@ -16,7 +16,7 @@ import (
 	"github.com/wsilvad/nwdaf/model"
 
 	"time"
-	// "strconv"
+	"strconv"
 
 )
 
@@ -94,21 +94,18 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 
 	// cat tree times ago
 	now := time.Now()
-	// threeHoursAgo := now.Add(-3 * time.Hour)
+	threeHoursAgo := now.Add(-3 * time.Hour)
 
-	now_timestamp := now.Unix()
-	// threeHoursAgo_timestamp := threeHoursAgo.Unix()
+	now_timestamp := strconv.FormatInt(now.Unix(),16)
+	threeHoursAgo_timestamp := strconv.FormatInt(threeHoursAgo.Unix(),16)
 
-	fmt.Print("",now_timestamp)
-	// fmt.Printf("Now: %+v", now_timestamp)
-	// fmt.Printf("Tree times Ago: %+v", threeHoursAgo_timestamp)
 
 	for i < 1 {
 		for num_ue := 0; num_ue < len(ue); num_ue ++ {
 			fmt.Println("###### Calling Promtheus API ######")
 			client := &http.Client{}
-			// req, err := http.NewRequest("GET", "http://"+ue[num_ue]+":9090/api/v1/query_range?query=node_network_transmit_bytes_total%7Bdevice%3D%22gretun1%22%7D&start="+threeHoursAgo_timestamp+"&end="+now_timestamp+"&step=14&_=1703425983189&", nil)
-			req, err := http.NewRequest("GET", "http://"+ue[num_ue]+":9090/api/v1/query_range?query=node_network_transmit_bytes_total%7Bdevice%3D%22gretun1%22%7D&start=1703422533.664&end=1703426133.664&step=14&_=1703425983189&", nil)
+			req, err := http.NewRequest("GET", "http://"+ue[num_ue]+":9090/api/v1/query_range?query=node_network_transmit_bytes_total%7Bdevice%3D%22gretun1%22%7D&start=%t"+threeHoursAgo_timestamp+"&end="+now_timestamp+"&step=14&_=1703425983189&", nil)
+			// req, err := http.NewRequest("GET", "http://"+ue[num_ue]+":9090/api/v1/query_range?query=node_network_transmit_bytes_total%7Bdevice%3D%22gretun1%22%7D&start=1703422533&end=1703426133&step=14&_=1703425983189&", nil)
 			if err != nil {
 			fmt.Print(err.Error())
 			}
@@ -124,12 +121,16 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 			fmt.Print(err.Error())
 			}
 			var responseObject model.PrometheusResponseMain
-
 			json.Unmarshal(bodyBytes, &responseObject)
-			fmt.Printf("API Response as struct from %+v\n\n", responseObject.Data.Result[0].Metric)
-			fmt.Printf("Data Reponse: %+v\n\n", responseObject.Data.Result[0].Values)
 
-			util.AddPrometheusData(&responseObject)
+			if (responseObject.Status != "error"){
+				fmt.Printf("API Response as struct from %+v\n\n", responseObject.Data.Result[0].Metric)
+				fmt.Printf("Data Reponse: %+v\n\n", responseObject.Data.Result[0].Values)	
+				util.AddPrometheusData(&responseObject)
+			}else{
+				fmt.Printf("API Response as struct from %+v\n", responseObject)
+				fmt.Printf("No Data")
+			}
 		}
 
 		time.Sleep(100 * time.Second)
