@@ -97,7 +97,7 @@ func InitEventExposureSubscriberPrometheus(self*nwdaf_context.NWDAFContext) {
 	threeHoursAgo := now.Add(-3 * time.Hour)
 
 	now_timestamp := now.Unix()
-	threeHoursAgo_timestamp := threeHoursAgo.Unix()
+	// threeHoursAgo_timestamp := threeHoursAgo.Unix()
 
 	fmt.Print("",now_timestamp)
 	// fmt.Printf("Now: %+v", now_timestamp)
