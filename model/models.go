@@ -62,6 +62,6 @@ type PrometheusResponseMetric struct {
 }
 
 type PrometheusResponseResult struct {
-	Metric 	PrometheusResponseMetric `json:"metric"`
-	Values 	[]interface{} `json:"values"`
+	Metric 	PrometheusResponseMetric 	`json:"metric"`
+	Values 	[]interface{}				`json:"values"`
 }

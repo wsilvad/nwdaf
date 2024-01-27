@@ -1,60 +1,57 @@
 package datacollection
 
 import (
-	"github.com/wsilvad/nwdaf/model"
-	"github.com/wsilvad/nwdaf/util"
-	"github.com/free5gc/openapi"
+	"github.com/wsilvad/nwdaf/commom"
+	"github.com/wsilvad/nwdaf/logger"
+	"github.com/free5gc/logger_util"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"time"
-
-	"fmt"
+	"strings"
 )
 
 
-func HTTPAmfRegistrationAccept(c *gin.Context) {
-	var registrationAccept model.RegistrationAccept
-	requestBody, err := c.GetRawData()
-	if err != nil {
-		c.Writer.WriteHeader(http.StatusBadGateway)
-		c.Writer.Write([]byte("Internal Error"))
-		return
+type Routes []commom.Route
+
+// NewRouter returns a new router.
+func NewRouter() *gin.Engine {
+	router := logger_util.NewGinWithLogrus(logger.GinLog)
+	AddService(router)
+	return router
+}
+func AddService(engine *gin.Engine) *gin.RouterGroup {
+	group := engine.Group("")
+
+	for _, route := range routes {
+		switch route.Method {
+		case "GET":
+			group.GET(route.Pattern, route.HandlerFunc)
+		case "POST":
+			group.POST(route.Pattern, route.HandlerFunc)
+		case "PUT":
+			group.PUT(route.Pattern, route.HandlerFunc)
+		case "DELETE":
+			group.DELETE(route.Pattern, route.HandlerFunc)
+		case "PATCH":
+			group.PATCH(route.Pattern, route.HandlerFunc)
+		}
 	}
 
-	err = openapi.Deserialize(&registrationAccept, requestBody, "application/json")
-	if err != nil {
-		c.Writer.WriteHeader(http.StatusBadGateway)
-		c.Writer.Write([]byte("Json Parser Error"))
-		return
-	}
-
-	registrationAccept.Date = time.Now()
-	/* registrar na base */
-	util.AddRegistrationAccept(&registrationAccept);
-	c.Writer.WriteHeader(http.StatusOK)
-	c.Writer.Write([]byte("Ok"))
+	return group
 }
 
-func HTTPPrometheusCollect(c *gin.Context) {
-	var prometheusData model.PrometheusResponseMain
-	requestBody, err := c.GetRawData()
-	if err != nil {
-		c.Writer.WriteHeader(http.StatusBadGateway)
-		c.Writer.Write([]byte("Internal Error"))
-		return
-	}
 
-	err = openapi.Deserialize(&prometheusData, requestBody, "application/json")
-	if err != nil {
-		c.Writer.WriteHeader(http.StatusBadGateway)
-		c.Writer.Write([]byte("Json Parser Error"))
-		return
-	}
+var routes = Routes{
 
-	/* registrar na base */
-	util.AddPrometheusData(&prometheusData);
-	c.Writer.WriteHeader(http.StatusOK)
-	c.Writer.Write([]byte("Ok"))
-
-	fmt.Printf("Prometheus Data saved successfully")
+	{
+		"AMFRegistrationAccept",
+		strings.ToUpper("Post"),
+		"/datacollection/amf-contexts/registration-accept",
+		HTTPAmfRegistrationAccept,
+	},
+	{
+		"PrometheusData",
+		strings.ToUpper("Post"),
+		"/datacollection/prometheus/data",
+		HTTPPrometheusCollect,
+	},
 }
+

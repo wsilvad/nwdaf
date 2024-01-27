@@ -222,7 +222,7 @@ func (nwdaf *NWDAF) Start() {
 	}
 
 	/* init subscriber data collect */
-	// datacollection.InitEventExposureSubscriber(self)
+	datacollection.InitEventExposureSubscriber(self)
 	fmt.Println("NWDAF listen on: ",factory.NwdafConfig.Configuration.Sbi.Port)
 	fmt.Println("\n")
 
